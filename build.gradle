@@ -13,12 +13,5 @@ dependencies {
     implementation 'org.springframework:spring-context:6.2.15'
     implementation 'org.springframework:spring-jdbc:6.2.15'
     implementation 'com.mysql:mysql-connector-j:9.5.0'
-
-    testImplementation platform('org.junit:junit-bom:5.10.0')
-    testImplementation 'org.junit.jupiter:junit-jupiter'
-    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
-}
-
-test {
-    useJUnitPlatform()
+    implementation 'junit:junit:4.13.2'
 }
