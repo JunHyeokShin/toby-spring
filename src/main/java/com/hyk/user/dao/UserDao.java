@@ -1,7 +1,6 @@
 package com.hyk.user.dao;
 
 import com.hyk.user.domain.User;
-import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -12,9 +11,8 @@ public class UserDao {
 
   private ConnectionMaker connectionMaker;
 
-  public UserDao() {
-    AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(DaoFactory.class);
-    this.connectionMaker = context.getBean("connectionMaker", ConnectionMaker.class);
+  public UserDao(ConnectionMaker connectionMaker) {
+    this.connectionMaker = connectionMaker;
   }
 
   public void add(User user) throws ClassNotFoundException, SQLException {
