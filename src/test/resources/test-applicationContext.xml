@@ -5,10 +5,6 @@
        http://www.springframework.org/schema/beans https://www.springframework.org/schema/beans/spring-beans.xsd">
   <bean id="userDao" class="com.hyk.user.dao.UserDao">
     <property name="dataSource" ref="dataSource"/>
-    <property name="jdbcContext" ref="jdbcContext"/>
-  </bean>
-  <bean id="jdbcContext" class="com.hyk.user.dao.JdbcContext">
-    <property name="dataSource" ref="dataSource"/>
   </bean>
   <bean id="dataSource" class="org.springframework.jdbc.datasource.SimpleDriverDataSource">
     <property name="driverClass" value="com.mysql.cj.jdbc.Driver"/>
