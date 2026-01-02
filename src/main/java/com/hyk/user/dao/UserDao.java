@@ -2,6 +2,7 @@ package com.hyk.user.dao;
 
 import com.hyk.user.domain.User;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.jdbc.core.JdbcTemplate;
 
 import javax.sql.DataSource;
 import java.sql.Connection;
@@ -11,27 +12,17 @@ import java.sql.SQLException;
 
 public class UserDao {
 
-  private JdbcContext jdbcContext;
+  private JdbcTemplate jdbcTemplate;
   private DataSource dataSource;
 
   public void setDataSource(DataSource dataSource) {
-    this.jdbcContext = new JdbcContext();
-    this.jdbcContext.setDataSource(dataSource);
+    this.jdbcTemplate = new JdbcTemplate(dataSource);
     this.dataSource = dataSource;
   }
 
-  public void add(final User user) throws SQLException {
-    this.jdbcContext.workWithStatementStrategy(
-        new StatementStrategy() {
-          public PreparedStatement makePreparedStatement(Connection c) throws SQLException {
-            PreparedStatement ps = c.prepareStatement("INSERT INTO users(id, name, password) VALUES(?, ?, ?)");
-            ps.setString(1, user.getId());
-            ps.setString(2, user.getName());
-            ps.setString(3, user.getPassword());
-            return ps;
-          }
-        }
-    );
+  public void add(User user) {
+    this.jdbcTemplate.update("INSERT INTO users(id, name, password) VALUES(?, ?, ?)",
+        user.getId(), user.getName(), user.getPassword());
   }
 
   public User get(String id) throws SQLException {
@@ -77,8 +68,8 @@ public class UserDao {
     }
   }
 
-  public void deleteAll() throws SQLException {
-    this.jdbcContext.executeSql("DELETE FROM users");
+  public void deleteAll() {
+    this.jdbcTemplate.update("DELETE FROM users");
   }
 
   public int getCount() throws SQLException {
