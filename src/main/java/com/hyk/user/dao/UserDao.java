@@ -72,39 +72,9 @@ public class UserDao {
     this.jdbcTemplate.update("DELETE FROM users");
   }
 
-  public int getCount() throws SQLException {
-    Connection c = null;
-    PreparedStatement ps = null;
-    ResultSet rs = null;
-
-    try {
-      c = dataSource.getConnection();
-      ps = c.prepareStatement("SELECT COUNT(*) FROM users");
-      rs = ps.executeQuery();
-      rs.next();
-      return rs.getInt(1);
-    } catch (SQLException e) {
-      throw e;
-    } finally {
-      if (rs != null) {
-        try {
-          rs.close();
-        } catch (SQLException e) {
-        }
-      }
-      if (ps != null) {
-        try {
-          ps.close();
-        } catch (SQLException e) {
-        }
-      }
-      if (c != null) {
-        try {
-          c.close();
-        } catch (SQLException e) {
-        }
-      }
-    }
+  public int getCount() {
+    // JdbcTemplate.queryForInt() 메소드는 4.2.0 버전 이후로 제거되었음
+    return this.jdbcTemplate.queryForObject("SELECT COUNT(*) FROM users", Integer.class);
   }
 
 }
