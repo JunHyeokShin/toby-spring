@@ -10,8 +10,6 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import java.sql.SQLException;
-
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
@@ -38,7 +36,7 @@ public class UserDaoTest {
   }
 
   @Test
-  public void addAndGet() throws SQLException {
+  public void addAndGet() {
     dao.deleteAll();
     assertThat(dao.getCount(), is(0));
 
@@ -56,7 +54,7 @@ public class UserDaoTest {
   }
 
   @Test(expected = EmptyResultDataAccessException.class)
-  public void getUserFailure() throws SQLException {
+  public void getUserFailure() {
     dao.deleteAll();
     assertThat(dao.getCount(), is(0));
 
@@ -64,7 +62,7 @@ public class UserDaoTest {
   }
 
   @Test
-  public void count() throws SQLException {
+  public void count() {
     dao.deleteAll();
     assertThat(dao.getCount(), is(0));
 
