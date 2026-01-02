@@ -12,11 +12,18 @@ import java.util.List;
 public class UserDao {
 
   private JdbcTemplate jdbcTemplate;
-  private DataSource dataSource;
+  private RowMapper<User> userMapper = new RowMapper<User>() {
+    public User mapRow(ResultSet rs, int rowNum) throws SQLException {
+      User user = new User();
+      user.setId(rs.getString("id"));
+      user.setName(rs.getString("name"));
+      user.setPassword(rs.getString("password"));
+      return user;
+    }
+  };
 
   public void setDataSource(DataSource dataSource) {
     this.jdbcTemplate = new JdbcTemplate(dataSource);
-    this.dataSource = dataSource;
   }
 
   public void add(User user) {
@@ -25,19 +32,7 @@ public class UserDao {
   }
 
   public User get(String id) {
-    return this.jdbcTemplate.queryForObject(
-        "SELECT * FROM users WHERE id = ?",
-        new Object[]{id},
-        new RowMapper<User>() {
-          public User mapRow(ResultSet rs, int rowNum) throws SQLException {
-            User user = new User();
-            user.setId(rs.getString("id"));
-            user.setName(rs.getString("name"));
-            user.setPassword(rs.getString("password"));
-            return user;
-          }
-        }
-    );
+    return this.jdbcTemplate.queryForObject("SELECT * FROM users WHERE id = ?", new Object[]{id}, this.userMapper);
   }
 
   public void deleteAll() {
@@ -50,18 +45,7 @@ public class UserDao {
   }
 
   public List<User> getAll() {
-    return this.jdbcTemplate.query(
-        "SELECT * FROM users ORDER BY id",
-        new RowMapper<User>() {
-          public User mapRow(ResultSet rs, int rowNum) throws SQLException {
-            User user = new User();
-            user.setId(rs.getString("id"));
-            user.setName(rs.getString("name"));
-            user.setPassword(rs.getString("password"));
-            return user;
-          }
-        }
-    );
+    return this.jdbcTemplate.query("SELECT * FROM users ORDER BY id", this.userMapper);
   }
 
 }
