@@ -17,6 +17,7 @@ import static com.hyk.user.service.UserService.MIN_LOGCOUNT_FOR_SILVER;
 import static com.hyk.user.service.UserService.MIN_RECOMMEND_FOR_GOLD;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
+import static org.junit.Assert.fail;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = "/test-applicationContext.xml")
@@ -72,6 +73,23 @@ public class UserServiceTest {
     assertThat(userWithoutLevelRead.getLevel(), is(Level.BASIC));
   }
 
+  @Test
+  public void upgradeAllOrNothing() {
+    UserService testUserService = new TestUserService(users.get(3).getId());
+    testUserService.setUserDao(this.userDao);
+    userDao.deleteAll();
+    for (User user : users) userDao.add(user);
+
+    try {
+      testUserService.upgradeLevels();
+      fail("TestUserServiceException expected");
+    } catch (TestUserServiceException e) {
+
+    }
+
+    checkLevelUpgraded(users.get(1), false);
+  }
+
   private void checkLevelUpgraded(User user, boolean upgraded) {
     User userUpdate = userDao.get(user.getId());
     if (upgraded) {
@@ -79,6 +97,26 @@ public class UserServiceTest {
     } else {
       assertThat(userUpdate.getLevel(), is(user.getLevel()));
     }
+  }
+
+  static class TestUserService extends UserService {
+
+    private String id;
+
+    private TestUserService(String id) {
+      this.id = id;
+    }
+
+    @Override
+    protected void upgradeLevel(User user) {
+      if (user.getId().equals(this.id)) throw new TestUserServiceException();
+      super.upgradeLevel(user);
+    }
+
+  }
+
+  static class TestUserServiceException extends RuntimeException {
+
   }
 
 }
