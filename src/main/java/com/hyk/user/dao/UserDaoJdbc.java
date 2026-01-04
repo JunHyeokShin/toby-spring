@@ -46,6 +46,14 @@ public class UserDaoJdbc implements UserDao {
     return this.jdbcTemplate.query("SELECT * FROM users ORDER BY id", this.userMapper);
   }
 
+  public void update(User user) {
+    this.jdbcTemplate.update(
+        "UPDATE users SET name = ?, password = ?, level = ?, login = ?, recommend = ? WHERE id = ?",
+        user.getName(), user.getPassword(), user.getLevel().intValue(),
+        user.getLogin(), user.getRecommend(), user.getId()
+    );
+  }
+
   public void deleteAll() {
     this.jdbcTemplate.update("DELETE FROM users");
   }
