@@ -1,5 +1,6 @@
 package com.hyk.user.dao;
 
+import com.hyk.user.domain.Level;
 import com.hyk.user.domain.User;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -18,6 +19,9 @@ public class UserDaoJdbc implements UserDao {
       user.setId(rs.getString("id"));
       user.setName(rs.getString("name"));
       user.setPassword(rs.getString("password"));
+      user.setLevel(Level.valueOf(rs.getInt("level")));
+      user.setLogin(rs.getInt("login"));
+      user.setRecommend(rs.getInt("recommend"));
       return user;
     }
   };
@@ -27,8 +31,11 @@ public class UserDaoJdbc implements UserDao {
   }
 
   public void add(User user) {
-    this.jdbcTemplate.update("INSERT INTO users(id, name, password) VALUES(?, ?, ?)",
-        user.getId(), user.getName(), user.getPassword());
+    this.jdbcTemplate.update(
+        "INSERT INTO users(id, name, password, level, login, recommend) VALUES(?, ?, ?, ?, ? ,?)",
+        user.getId(), user.getName(), user.getPassword(),
+        user.getLevel().intValue(), user.getLogin(), user.getRecommend()
+    );
   }
 
   public User get(String id) {
