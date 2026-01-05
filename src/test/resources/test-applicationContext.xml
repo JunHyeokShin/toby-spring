@@ -5,11 +5,13 @@
        http://www.springframework.org/schema/beans https://www.springframework.org/schema/beans/spring-beans.xsd">
   <bean id="userService" class="com.hyk.user.service.UserService">
     <property name="userDao" ref="userDao"/>
+    <property name="mailSender" ref="mailSender"/>
     <property name="transactionManager" ref="transactionManager"/>
   </bean>
   <bean id="userDao" class="com.hyk.user.dao.UserDaoJdbc">
     <property name="dataSource" ref="dataSource"/>
   </bean>
+  <bean id="mailSender" class="com.hyk.user.service.DummyMailSender"/>
   <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
     <property name="dataSource" ref="dataSource"/>
   </bean>

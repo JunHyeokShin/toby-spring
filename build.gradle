@@ -12,6 +12,7 @@ repositories {
 dependencies {
     implementation 'org.springframework:spring-context:6.2.15'
     implementation 'org.springframework:spring-jdbc:6.2.15'
+    implementation 'org.springframework:spring-context-support:6.2.15'
     implementation 'com.mysql:mysql-connector-j:9.5.0'
     implementation 'jakarta.mail:jakarta.mail-api:2.1.5'
 
