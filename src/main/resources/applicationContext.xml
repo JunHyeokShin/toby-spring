@@ -5,6 +5,7 @@
        http://www.springframework.org/schema/beans https://www.springframework.org/schema/beans/spring-beans.xsd">
   <bean id="userService" class="com.hyk.user.service.UserService">
     <property name="userDao" ref="userDao"/>
+    <property name="dataSource" ref="dataSource"/>
   </bean>
   <bean id="userDao" class="com.hyk.user.dao.UserDaoJdbc">
     <property name="dataSource" ref="dataSource"/>
