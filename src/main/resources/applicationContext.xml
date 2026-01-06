@@ -3,9 +3,11 @@
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:schemaLocation="
        http://www.springframework.org/schema/beans https://www.springframework.org/schema/beans/spring-beans.xsd">
-  <bean id="userService" class="com.hyk.user.service.UserServiceTx">
-    <property name="userService" ref="userServiceImpl"/>
+  <bean id="userService" class="com.hyk.user.service.TxProxyFactoryBean">
+    <property name="target" ref="userServiceImpl"/>
     <property name="transactionManager" ref="transactionManager"/>
+    <property name="pattern" value="upgradeLevels"/>
+    <property name="serviceInterface" value="com.hyk.user.service.UserService"/>
   </bean>
   <bean id="userServiceImpl" class="com.hyk.user.service.UserServiceImpl">
     <property name="userDao" ref="userDao"/>
