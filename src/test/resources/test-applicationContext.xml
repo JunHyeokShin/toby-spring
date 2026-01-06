@@ -3,10 +3,13 @@
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:schemaLocation="
        http://www.springframework.org/schema/beans https://www.springframework.org/schema/beans/spring-beans.xsd">
-  <bean id="userService" class="com.hyk.user.service.UserService">
+  <bean id="userService" class="com.hyk.user.service.UserServiceTx">
+    <property name="userService" ref="userServiceImpl"/>
+    <property name="transactionManager" ref="transactionManager"/>
+  </bean>
+  <bean id="userServiceImpl" class="com.hyk.user.service.UserServiceImpl">
     <property name="userDao" ref="userDao"/>
     <property name="mailSender" ref="mailSender"/>
-    <property name="transactionManager" ref="transactionManager"/>
   </bean>
   <bean id="userDao" class="com.hyk.user.dao.UserDaoJdbc">
     <property name="dataSource" ref="dataSource"/>

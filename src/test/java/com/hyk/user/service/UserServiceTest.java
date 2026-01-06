@@ -19,8 +19,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static com.hyk.user.service.UserService.MIN_LOGCOUNT_FOR_SILVER;
-import static com.hyk.user.service.UserService.MIN_RECOMMEND_FOR_GOLD;
+import static com.hyk.user.service.UserServiceImpl.MIN_LOGCOUNT_FOR_SILVER;
+import static com.hyk.user.service.UserServiceImpl.MIN_RECOMMEND_FOR_GOLD;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.fail;
@@ -30,13 +30,15 @@ import static org.junit.Assert.fail;
 public class UserServiceTest {
 
   @Autowired
-  UserService userService;
+  private UserService userService;
   @Autowired
-  UserDao userDao;
+  private UserServiceImpl userServiceImpl;
   @Autowired
-  MailSender mailSender;
+  private UserDao userDao;
   @Autowired
-  PlatformTransactionManager transactionManager;
+  private MailSender mailSender;
+  @Autowired
+  private PlatformTransactionManager transactionManager;
 
   List<User> users;
 
@@ -58,7 +60,7 @@ public class UserServiceTest {
     for (User user : users) userDao.add(user);
 
     MockMailSender mockMailSender = new MockMailSender();
-    userService.setMailSender(mockMailSender);
+    userServiceImpl.setMailSender(mockMailSender);
 
     userService.upgradeLevels();
 
@@ -94,18 +96,21 @@ public class UserServiceTest {
 
   @Test
   public void upgradeAllOrNothing() {
-    UserService testUserService = new TestUserService(users.get(3).getId());
+    TestUserService testUserService = new TestUserService(users.get(3).getId());
     testUserService.setUserDao(userDao);
     testUserService.setMailSender(mailSender);
-    testUserService.setTransactionManager(transactionManager);
+
+    UserServiceTx txUserService = new UserServiceTx();
+    txUserService.setTransactionManager(transactionManager);
+    txUserService.setUserService(testUserService);
+
     userDao.deleteAll();
     for (User user : users) userDao.add(user);
 
     try {
-      testUserService.upgradeLevels();
+      txUserService.upgradeLevels();
       fail("TestUserServiceException expected");
     } catch (TestUserServiceException e) {
-
     }
 
     checkLevelUpgraded(users.get(1), false);
@@ -139,7 +144,7 @@ public class UserServiceTest {
 
   }
 
-  static class TestUserService extends UserService {
+  static class TestUserService extends UserServiceImpl {
 
     private String id;
 
