@@ -11,9 +11,8 @@
   <bean id="transactionAdvice" class="com.hyk.user.service.TransactionAdvice">
     <property name="transactionManager" ref="transactionManager"/>
   </bean>
-  <bean id="transactionPointcut" class="com.hyk.user.service.NameMatchClassMethodPointcut">
-    <property name="mappedClassName" value="*ServiceImpl"/>
-    <property name="mappedName" value="upgrade*"/>
+  <bean id="transactionPointcut" class="org.springframework.aop.aspectj.AspectJExpressionPointcut">
+    <property name="expression" value="execution(* *..*ServiceImpl.upgrade*(..))"/>
   </bean>
   <bean id="userService" class="com.hyk.user.service.UserServiceImpl">
     <property name="userDao" ref="userDao"/>
