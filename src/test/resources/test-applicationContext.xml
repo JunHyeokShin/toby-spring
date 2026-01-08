@@ -1,22 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xmlns:aop="http://www.springframework.org/schema/aop"
        xmlns:tx="http://www.springframework.org/schema/tx"
        xsi:schemaLocation="
        http://www.springframework.org/schema/beans https://www.springframework.org/schema/beans/spring-beans.xsd
-       http://www.springframework.org/schema/aop https://www.springframework.org/schema/aop/spring-aop.xsd
        http://www.springframework.org/schema/tx https://www.springframework.org/schema/tx/spring-tx.xsd">
-  <aop:config>
-    <aop:advisor advice-ref="transactionAdvice" pointcut="bean(*Service)"/>
-  </aop:config>
-  <tx:advice id="transactionAdvice">
-    <tx:attributes>
-      <tx:method name="get*" read-only="true"/>
-      <tx:method name="*"/>
-    </tx:attributes>
-  </tx:advice>
-
+  <tx:annotation-driven/>
   <bean id="testUserService" class="com.hyk.user.service.UserServiceTest$TestUserService" parent="userService"/>
   <bean id="userService" class="com.hyk.user.service.UserServiceImpl">
     <property name="userDao" ref="userDao"/>
