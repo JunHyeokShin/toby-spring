@@ -13,20 +13,23 @@
   </bean>
   <bean id="userDao" class="com.hyk.user.dao.UserDaoJdbc">
     <property name="dataSource" ref="dataSource"/>
+    <property name="sqlService" ref="sqlService"/>
+  </bean>
+  <bean id="mailSender" class="com.hyk.user.service.DummyMailSender"/>
+  <bean id="sqlService" class="com.hyk.user.sqlservice.SimpleSqlService">
     <property name="sqlMap">
       <map>
-        <entry key="add"
+        <entry key="userAdd"
                value="INSERT INTO users(id, name, password, email, level, login, recommend) VALUES(?, ?, ?, ?, ?, ? ,?)"/>
-        <entry key="get" value="SELECT * FROM users WHERE id = ?"/>
-        <entry key="getAll" value="SELECT * FROM users ORDER BY id"/>
-        <entry key="update"
+        <entry key="userGet" value="SELECT * FROM users WHERE id = ?"/>
+        <entry key="userGetAll" value="SELECT * FROM users ORDER BY id"/>
+        <entry key="userUpdate"
                value="UPDATE users SET name = ?, password = ?, email = ?, level = ?, login = ?, recommend = ? WHERE id = ?"/>
-        <entry key="deleteAll" value="DELETE FROM users"/>
-        <entry key="getCount" value="SELECT COUNT(*) FROM users"/>
+        <entry key="userDeleteAll" value="DELETE FROM users"/>
+        <entry key="userGetCount" value="SELECT COUNT(*) FROM users"/>
       </map>
     </property>
   </bean>
-  <bean id="mailSender" class="com.hyk.user.service.DummyMailSender"/>
   <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
     <property name="dataSource" ref="dataSource"/>
   </bean>

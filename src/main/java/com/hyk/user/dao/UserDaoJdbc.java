@@ -2,6 +2,7 @@ package com.hyk.user.dao;
 
 import com.hyk.user.domain.Level;
 import com.hyk.user.domain.User;
+import com.hyk.user.sqlservice.SqlService;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 
@@ -9,12 +10,11 @@ import javax.sql.DataSource;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
-import java.util.Map;
 
 public class UserDaoJdbc implements UserDao {
 
   private JdbcTemplate jdbcTemplate;
-  private Map<String, String> sqlMap;
+  private SqlService sqlService;
   private RowMapper<User> userMapper = new RowMapper<User>() {
     public User mapRow(ResultSet rs, int rowNum) throws SQLException {
       User user = new User();
@@ -33,14 +33,14 @@ public class UserDaoJdbc implements UserDao {
     this.jdbcTemplate = new JdbcTemplate(dataSource);
   }
 
-  public void setSqlMap(Map<String, String> sqlMap) {
-    this.sqlMap = sqlMap;
+  public void setSqlService(SqlService sqlService) {
+    this.sqlService = sqlService;
   }
 
   @Override
   public void add(User user) {
     this.jdbcTemplate.update(
-        this.sqlMap.get("add"),
+        this.sqlService.getSql("userAdd"),
         user.getId(), user.getName(), user.getPassword(), user.getEmail(),
         user.getLevel().intValue(), user.getLogin(), user.getRecommend()
     );
@@ -48,18 +48,18 @@ public class UserDaoJdbc implements UserDao {
 
   @Override
   public User get(String id) {
-    return this.jdbcTemplate.queryForObject(this.sqlMap.get("get"), new Object[]{id}, this.userMapper);
+    return this.jdbcTemplate.queryForObject(this.sqlService.getSql("userGet"), new Object[]{id}, this.userMapper);
   }
 
   @Override
   public List<User> getAll() {
-    return this.jdbcTemplate.query(this.sqlMap.get("getAll"), this.userMapper);
+    return this.jdbcTemplate.query(this.sqlService.getSql("userGetAll"), this.userMapper);
   }
 
   @Override
   public void update(User user) {
     this.jdbcTemplate.update(
-        this.sqlMap.get("update"),
+        this.sqlService.getSql("userUpdate"),
         user.getName(), user.getPassword(), user.getEmail(),
         user.getLevel().intValue(), user.getLogin(), user.getRecommend(), user.getId()
     );
@@ -67,13 +67,12 @@ public class UserDaoJdbc implements UserDao {
 
   @Override
   public void deleteAll() {
-    this.jdbcTemplate.update(this.sqlMap.get("deleteAll"));
+    this.jdbcTemplate.update(this.sqlService.getSql("userDeleteAll"));
   }
 
   @Override
   public int getCount() {
-    // JdbcTemplate.queryForInt() 메소드는 4.2.0 버전 이후로 제거되었음
-    return this.jdbcTemplate.queryForObject(this.sqlMap.get("getCount"), Integer.class);
+    return this.jdbcTemplate.queryForObject(this.sqlService.getSql("userGetCount"), Integer.class);
   }
 
 }
