@@ -1,10 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
        xmlns:tx="http://www.springframework.org/schema/tx"
        xsi:schemaLocation="
        http://www.springframework.org/schema/beans https://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/context https://www.springframework.org/schema/context/spring-context.xsd
        http://www.springframework.org/schema/tx https://www.springframework.org/schema/tx/spring-tx.xsd">
+  <context:annotation-config/>
   <tx:annotation-driven/>
   <bean id="testUserService" class="com.hyk.user.service.UserServiceTest$TestUserService" parent="userService"/>
   <bean id="userService" class="com.hyk.user.service.UserServiceImpl">
@@ -16,7 +19,9 @@
     <property name="sqlService" ref="sqlService"/>
   </bean>
   <bean id="mailSender" class="com.hyk.user.service.DummyMailSender"/>
-  <bean id="sqlService" class="com.hyk.user.sqlservice.XmlSqlService"/>
+  <bean id="sqlService" class="com.hyk.user.sqlservice.XmlSqlService">
+    <property name="sqlmapFile" value="sqlmap.xml"/>
+  </bean>
   <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
     <property name="dataSource" ref="dataSource"/>
   </bean>
