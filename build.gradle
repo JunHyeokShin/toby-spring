@@ -13,6 +13,7 @@ dependencies {
     implementation 'org.springframework:spring-context:6.2.15'
     implementation 'org.springframework:spring-jdbc:6.2.15'
     implementation 'org.springframework:spring-context-support:6.2.15'
+    implementation 'org.springframework:spring-oxm:6.2.15'
     implementation 'org.aspectj:aspectjtools:1.9.25.1'
     implementation 'com.mysql:mysql-connector-j:9.5.0'
     implementation 'jakarta.annotation:jakarta.annotation-api:3.0.0'
