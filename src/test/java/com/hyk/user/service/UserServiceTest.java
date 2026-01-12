@@ -12,11 +12,10 @@ import org.springframework.dao.TransientDataAccessResourceException;
 import org.springframework.mail.MailException;
 import org.springframework.mail.MailSender;
 import org.springframework.mail.SimpleMailMessage;
+import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.transaction.PlatformTransactionManager;
-import org.springframework.transaction.TransactionStatus;
-import org.springframework.transaction.support.DefaultTransactionDefinition;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -40,8 +39,6 @@ public class UserServiceTest {
   private UserService testUserService;
   @Autowired
   private UserDao userDao;
-  @Autowired
-  private PlatformTransactionManager transactionManager;
 
   List<User> users;
 
@@ -148,17 +145,12 @@ public class UserServiceTest {
   }
 
   @Test
+  @Transactional
+  @Rollback(false)
   public void transactionSync() {
-    DefaultTransactionDefinition txDefinition = new DefaultTransactionDefinition();
-    TransactionStatus txStatus = transactionManager.getTransaction(txDefinition);
-
-    try {
-      userDao.deleteAll();
-      userService.add(users.get(0));
-      userService.add(users.get(1));
-    } finally {
-      transactionManager.rollback(txStatus);
-    }
+    userDao.deleteAll();
+    userService.add(users.get(0));
+    userService.add(users.get(1));
   }
 
   private void checkUserAndLevel(User updated, String expectedId, Level expectedLevel) {
