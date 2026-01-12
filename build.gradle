@@ -16,6 +16,8 @@ dependencies {
     implementation 'org.aspectj:aspectjtools:1.9.25.1'
     implementation 'com.mysql:mysql-connector-j:9.5.0'
     implementation 'jakarta.mail:jakarta.mail-api:2.1.5'
+    implementation 'jakarta.xml.bind:jakarta.xml.bind-api:4.0.4'
+    implementation 'org.glassfish.jaxb:jaxb-runtime:4.0.6'
 
     testImplementation 'org.springframework:spring-test:6.2.15'
     testImplementation 'junit:junit:4.13.2'
