@@ -9,10 +9,12 @@ import javax.sql.DataSource;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Map;
 
 public class UserDaoJdbc implements UserDao {
 
   private JdbcTemplate jdbcTemplate;
+  private Map<String, String> sqlMap;
   private RowMapper<User> userMapper = new RowMapper<User>() {
     public User mapRow(ResultSet rs, int rowNum) throws SQLException {
       User user = new User();
@@ -31,37 +33,47 @@ public class UserDaoJdbc implements UserDao {
     this.jdbcTemplate = new JdbcTemplate(dataSource);
   }
 
+  public void setSqlMap(Map<String, String> sqlMap) {
+    this.sqlMap = sqlMap;
+  }
+
+  @Override
   public void add(User user) {
     this.jdbcTemplate.update(
-        "INSERT INTO users(id, name, password, email, level, login, recommend) VALUES(?, ?, ?, ?, ?, ? ,?)",
+        this.sqlMap.get("add"),
         user.getId(), user.getName(), user.getPassword(), user.getEmail(),
         user.getLevel().intValue(), user.getLogin(), user.getRecommend()
     );
   }
 
+  @Override
   public User get(String id) {
-    return this.jdbcTemplate.queryForObject("SELECT * FROM users WHERE id = ?", new Object[]{id}, this.userMapper);
+    return this.jdbcTemplate.queryForObject(this.sqlMap.get("get"), new Object[]{id}, this.userMapper);
   }
 
+  @Override
   public List<User> getAll() {
-    return this.jdbcTemplate.query("SELECT * FROM users ORDER BY id", this.userMapper);
+    return this.jdbcTemplate.query(this.sqlMap.get("getAll"), this.userMapper);
   }
 
+  @Override
   public void update(User user) {
     this.jdbcTemplate.update(
-        "UPDATE users SET name = ?, password = ?, email = ?, level = ?, login = ?, recommend = ? WHERE id = ?",
+        this.sqlMap.get("update"),
         user.getName(), user.getPassword(), user.getEmail(),
         user.getLevel().intValue(), user.getLogin(), user.getRecommend(), user.getId()
     );
   }
 
+  @Override
   public void deleteAll() {
-    this.jdbcTemplate.update("DELETE FROM users");
+    this.jdbcTemplate.update(this.sqlMap.get("deleteAll"));
   }
 
+  @Override
   public int getCount() {
     // JdbcTemplate.queryForInt() 메소드는 4.2.0 버전 이후로 제거되었음
-    return this.jdbcTemplate.queryForObject("SELECT COUNT(*) FROM users", Integer.class);
+    return this.jdbcTemplate.queryForObject(this.sqlMap.get("getCount"), Integer.class);
   }
 
 }
