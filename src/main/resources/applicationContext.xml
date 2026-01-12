@@ -17,20 +17,7 @@
   <bean id="mailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
     <property name="host" value="mail.server.com"/>
   </bean>
-  <bean id="sqlService" class="com.hyk.user.sqlservice.SimpleSqlService">
-    <property name="sqlMap">
-      <map>
-        <entry key="userAdd"
-               value="INSERT INTO users(id, name, password, email, level, login, recommend) VALUES(?, ?, ?, ?, ?, ? ,?)"/>
-        <entry key="userGet" value="SELECT * FROM users WHERE id = ?"/>
-        <entry key="userGetAll" value="SELECT * FROM users ORDER BY id"/>
-        <entry key="userUpdate"
-               value="UPDATE users SET name = ?, password = ?, email = ?, level = ?, login = ?, recommend = ? WHERE id = ?"/>
-        <entry key="userDeleteAll" value="DELETE FROM users"/>
-        <entry key="userGetCount" value="SELECT COUNT(*) FROM users"/>
-      </map>
-    </property>
-  </bean>
+  <bean id="sqlService" class="com.hyk.user.sqlservice.XmlSqlService"/>
   <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
     <property name="dataSource" ref="dataSource"/>
   </bean>
