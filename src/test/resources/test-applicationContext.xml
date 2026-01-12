@@ -19,14 +19,7 @@
     <property name="sqlService" ref="sqlService"/>
   </bean>
   <bean id="mailSender" class="com.hyk.user.service.DummyMailSender"/>
-  <bean id="sqlService" class="com.hyk.user.sqlservice.BaseSqlService">
-    <property name="sqlReader" ref="sqlReader"/>
-    <property name="sqlRegistry" ref="sqlRegistry"/>
-  </bean>
-  <bean id="sqlReader" class="com.hyk.user.sqlservice.JaxbXmlSqlReader">
-    <property name="sqlmapFile" value="sqlmap.xml"/>
-  </bean>
-  <bean id="sqlRegistry" class="com.hyk.user.sqlservice.HashMapSqlRegistry"/>
+  <bean id="sqlService" class="com.hyk.user.sqlservice.DefaultSqlService"/>
   <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
     <property name="dataSource" ref="dataSource"/>
   </bean>
