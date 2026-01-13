@@ -19,7 +19,12 @@
     <property name="sqlService" ref="sqlService"/>
   </bean>
   <bean id="mailSender" class="com.hyk.user.service.DummyMailSender"/>
-  <bean id="sqlService" class="com.hyk.user.sqlservice.DefaultSqlService"/>
+  <bean id="sqlService" class="com.hyk.user.sqlservice.OxmSqlService">
+    <property name="unmarshaller" ref="unmarshaller"/>
+  </bean>
+  <bean id="unmarshaller" class="org.springframework.oxm.jaxb.Jaxb2Marshaller">
+    <property name="contextPath" value="com.hyk.user.sqlservice.jaxb"/>
+  </bean>
   <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
     <property name="dataSource" ref="dataSource"/>
   </bean>
