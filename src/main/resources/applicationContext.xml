@@ -8,37 +8,7 @@
        http://www.springframework.org/schema/tx https://www.springframework.org/schema/tx/spring-tx.xsd
        http://www.springframework.org/schema/jdbc https://www.springframework.org/schema/jdbc/spring-jdbc.xsd">
   <tx:annotation-driven/>
-  <bean id="userService" class="com.hyk.user.service.UserServiceImpl">
-    <property name="userDao" ref="userDao"/>
-    <property name="mailSender" ref="mailSender"/>
-  </bean>
-  <bean id="userDao" class="com.hyk.user.dao.UserDaoJdbc">
-    <property name="dataSource" ref="dataSource"/>
-    <property name="sqlService" ref="sqlService"/>
-  </bean>
-  <bean id="mailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
-    <property name="host" value="mail.server.com"/>
-  </bean>
-  <bean id="sqlService" class="com.hyk.user.sqlservice.OxmSqlService">
-    <property name="sqlRegistry" ref="sqlRegistry"/>
-    <property name="unmarshaller" ref="unmarshaller"/>
-  </bean>
-  <bean id="sqlRegistry" class="com.hyk.user.sqlservice.updatable.EmbeddedDbSqlRegistry">
-    <property name="dataSource" ref="embeddedDatabase"/>
-  </bean>
   <jdbc:embedded-database id="embeddedDatabase" type="HSQL">
     <jdbc:script location="classpath:com/hyk/user/sqlservice/updatable/sqlRegistrySchema.sql"/>
   </jdbc:embedded-database>
-  <bean id="unmarshaller" class="org.springframework.oxm.jaxb.Jaxb2Marshaller">
-    <property name="contextPath" value="com.hyk.user.sqlservice.jaxb"/>
-  </bean>
-  <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
-    <property name="dataSource" ref="dataSource"/>
-  </bean>
-  <bean id="dataSource" class="org.springframework.jdbc.datasource.SimpleDriverDataSource">
-    <property name="driverClass" value="com.mysql.cj.jdbc.Driver"/>
-    <property name="url" value="jdbc:mysql://localhost:3306/springbook"/>
-    <property name="username" value="root"/>
-    <property name="password" value="password1234"/>
-  </bean>
 </beans>
