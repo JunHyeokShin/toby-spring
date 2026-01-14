@@ -1,6 +1,7 @@
 package com.hyk.user.service;
 
-import com.hyk.TestApplicationContext;
+import com.hyk.AppContext;
+import com.hyk.TestAppContext;
 import com.hyk.user.dao.UserDao;
 import com.hyk.user.domain.Level;
 import com.hyk.user.domain.User;
@@ -31,7 +32,7 @@ import static org.junit.Assert.fail;
 import static org.mockito.Mockito.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = TestApplicationContext.class)
+@ContextConfiguration(classes = {TestAppContext.class, AppContext.class})
 public class UserServiceTest {
 
   @Autowired
