@@ -1,5 +1,6 @@
 package com.hyk.user.dao;
 
+import com.hyk.TestApplicationContext;
 import com.hyk.user.domain.Level;
 import com.hyk.user.domain.User;
 import org.junit.Before;
@@ -22,7 +23,7 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = "/test-applicationContext.xml")
+@ContextConfiguration(classes = TestApplicationContext.class)
 public class UserDaoTest {
 
   @Autowired
