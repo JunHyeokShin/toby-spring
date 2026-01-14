@@ -4,6 +4,8 @@ import com.mysql.cj.jdbc.Driver;
 import org.springframework.context.annotation.*;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.jdbc.datasource.SimpleDriverDataSource;
+import org.springframework.mail.MailSender;
+import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
@@ -31,6 +33,14 @@ public class AppContext {
     dataSource.setUsername("root");
     dataSource.setPassword("password1234");
     return dataSource;
+  }
+
+  @Bean
+  @Profile("production")
+  public MailSender mailSender() {
+    JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
+    mailSender.setHost("localhost");
+    return mailSender;
   }
 
 }
