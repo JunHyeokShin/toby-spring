@@ -3,17 +3,21 @@ package com.hyk.user.dao;
 import com.hyk.user.domain.Level;
 import com.hyk.user.domain.User;
 import com.hyk.user.sqlservice.SqlService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 
+@Repository
 public class UserDaoJdbc implements UserDao {
 
   private JdbcTemplate jdbcTemplate;
+  @Autowired
   private SqlService sqlService;
   private RowMapper<User> userMapper = new RowMapper<User>() {
     public User mapRow(ResultSet rs, int rowNum) throws SQLException {
@@ -29,12 +33,9 @@ public class UserDaoJdbc implements UserDao {
     }
   };
 
+  @Autowired
   public void setDataSource(DataSource dataSource) {
     this.jdbcTemplate = new JdbcTemplate(dataSource);
-  }
-
-  public void setSqlService(SqlService sqlService) {
-    this.sqlService = sqlService;
   }
 
   @Override

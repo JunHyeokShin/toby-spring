@@ -1,18 +1,19 @@
 package com.hyk;
 
 import com.hyk.user.dao.UserDao;
-import com.hyk.user.dao.UserDaoJdbc;
 import com.hyk.user.service.DummyMailSender;
 import com.hyk.user.service.UserService;
-import com.hyk.user.service.UserServiceImpl;
 import com.hyk.user.service.UserServiceTest.TestUserService;
 import com.hyk.user.sqlservice.OxmSqlService;
 import com.hyk.user.sqlservice.SqlRegistry;
 import com.hyk.user.sqlservice.SqlService;
 import com.hyk.user.sqlservice.updatable.EmbeddedDbSqlRegistry;
 import com.mysql.cj.jdbc.Driver;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.jdbc.datasource.SimpleDriverDataSource;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
@@ -28,30 +29,18 @@ import static org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType.
 
 @Configuration
 @EnableTransactionManagement
+@ComponentScan(basePackages = "com.hyk.user")
 public class TestApplicationContext {
+
+  @Autowired
+  private UserDao userDao;
 
   @Bean
   public UserService testUserService() {
     TestUserService testService = new TestUserService();
-    testService.setUserDao(userDao());
+    testService.setUserDao(this.userDao);
     testService.setMailSender(mailSender());
     return testService;
-  }
-
-  @Bean
-  public UserService userService() {
-    UserServiceImpl service = new UserServiceImpl();
-    service.setUserDao(userDao());
-    service.setMailSender(mailSender());
-    return service;
-  }
-
-  @Bean
-  public UserDao userDao() {
-    UserDaoJdbc dao = new UserDaoJdbc();
-    dao.setDataSource(dataSource());
-    dao.setSqlService(sqlService());
-    return dao;
   }
 
   @Bean
@@ -98,6 +87,7 @@ public class TestApplicationContext {
   }
 
   @Bean
+  @Primary
   public DataSource dataSource() {
     SimpleDriverDataSource dataSource = new SimpleDriverDataSource();
     dataSource.setDriverClass(Driver.class);

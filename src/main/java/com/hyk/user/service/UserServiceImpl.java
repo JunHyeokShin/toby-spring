@@ -3,17 +3,22 @@ package com.hyk.user.service;
 import com.hyk.user.dao.UserDao;
 import com.hyk.user.domain.Level;
 import com.hyk.user.domain.User;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.MailSender;
 import org.springframework.mail.SimpleMailMessage;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@Service("userService")
 public class UserServiceImpl implements UserService {
 
   public static final int MIN_LOGCOUNT_FOR_SILVER = 50;
   public static final int MIN_RECOMMEND_FOR_GOLD = 30;
 
+  @Autowired
   private UserDao userDao;
+  @Autowired
   private MailSender mailSender;
 
   public void setUserDao(UserDao userDao) {
