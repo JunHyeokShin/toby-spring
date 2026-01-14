@@ -9,26 +9,25 @@ import com.hyk.user.sqlservice.SqlRegistry;
 import com.hyk.user.sqlservice.SqlService;
 import com.hyk.user.sqlservice.updatable.EmbeddedDbSqlRegistry;
 import com.mysql.cj.jdbc.Driver;
-import jakarta.annotation.Resource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.ImportResource;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.jdbc.datasource.SimpleDriverDataSource;
+import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
 import org.springframework.mail.MailSender;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.oxm.Unmarshaller;
 import org.springframework.oxm.jaxb.Jaxb2Marshaller;
 import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import javax.sql.DataSource;
 
-@Configuration
-@ImportResource("/applicationContext.xml")
-public class ApplicationContext {
+import static org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType.HSQL;
 
-  @Resource
-  DataSource embeddedDatabase;
+@Configuration
+@EnableTransactionManagement
+public class ApplicationContext {
 
   @Bean
   public UserService userService() {
@@ -64,8 +63,17 @@ public class ApplicationContext {
   @Bean
   public SqlRegistry sqlRegistry() {
     EmbeddedDbSqlRegistry sqlRegistry = new EmbeddedDbSqlRegistry();
-    sqlRegistry.setDataSource(this.embeddedDatabase);
+    sqlRegistry.setDataSource(embeddedDatabase());
     return sqlRegistry;
+  }
+
+  @Bean
+  public DataSource embeddedDatabase() {
+    return new EmbeddedDatabaseBuilder()
+        .setName("embeddedDatabase")
+        .setType(HSQL)
+        .addScript("classpath:com/hyk/user/sqlservice/updatable/sqlRegistrySchema.sql")
+        .build();
   }
 
   @Bean
