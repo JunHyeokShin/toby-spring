@@ -1,6 +1,5 @@
 package com.hyk.user.sqlservice;
 
-import com.hyk.user.dao.UserDao;
 import com.hyk.user.sqlservice.jaxb.SqlType;
 import com.hyk.user.sqlservice.jaxb.Sqlmap;
 import jakarta.annotation.PostConstruct;
@@ -46,7 +45,7 @@ public class OxmSqlService implements SqlService {
   private class OxmSqlReader implements SqlReader {
 
     private Unmarshaller unmarshaller;
-    private Resource sqlmap = new ClassPathResource("sqlmap.xml", UserDao.class);
+    private Resource sqlmap = new ClassPathResource("/sqlmap.xml");
 
     public void setUnmarshaller(Unmarshaller unmarshaller) {
       this.unmarshaller = unmarshaller;
